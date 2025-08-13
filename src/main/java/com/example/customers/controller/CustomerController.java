@@ -22,9 +22,15 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerResponse> create(@Valid @RequestBody CustomerRequest request) {
-        CustomerResponse created = service.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    // ✅ New check to make test pass
+    if (request.getId() != null) {
+        return ResponseEntity.badRequest().build();
     }
+
+    CustomerResponse saved = service.create(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+}
+
 
     @GetMapping("/{id}")
     public CustomerResponse getById(@PathVariable UUID id) {

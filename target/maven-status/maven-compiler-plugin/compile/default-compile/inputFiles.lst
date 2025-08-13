@@ -1,0 +1,10 @@
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/model/Customer.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/service/CustomerService.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/config/CorsConfig.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/controller/CustomerController.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/CustomerManagementApiApplication.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/controller/GlobalExceptionHandler.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/config/OpenApiConfig.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/dto/CustomerResponse.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/repository/CustomerRepository.java
+/workspaces/JAVA-coding-challenge/src/main/java/com/example/customers/dto/CustomerRequest.java

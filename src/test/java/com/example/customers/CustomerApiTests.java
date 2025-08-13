@@ -120,4 +120,57 @@ class CustomerApiTests {
         mockMvc.perform(get("/customers/" + id))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void postShouldFailIfIdPresent() throws Exception {
+    String json = """
+        {
+          "id": "123e4567-e89b-12d3-a456-426614174000",
+          "name": "Invalid Customer",
+          "email": "invalid@example.com"
+        }
+        """;
+
+    mockMvc.perform(post("/customers")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isBadRequest());
+}
+
+    @Test
+    void tierBoundaryValues() throws Exception {
+    // Gold boundary at exactly $1000
+    CustomerRequest goldBoundary = new CustomerRequest();
+    goldBoundary.setName("GoldBoundary");
+    goldBoundary.setEmail("goldb@example.com");
+    goldBoundary.setAnnualSpend(new java.math.BigDecimal("1000"));
+    goldBoundary.setLastPurchaseDate(OffsetDateTime.now().minusMonths(11));
+    String gbody = objectMapper.writeValueAsString(goldBoundary);
+    String gresp = mockMvc.perform(post("/customers")
+            .contentType(MediaType.APPLICATION_JSON).content(gbody))
+            .andExpect(status().isCreated())
+            .andReturn().getResponse().getContentAsString();
+    String gid = objectMapper.readTree(gresp).get("id").asText();
+    mockMvc.perform(get("/customers/" + gid))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.tier").value("Gold"));
+
+    // Platinum boundary at exactly $10000
+    CustomerRequest platBoundary = new CustomerRequest();
+    platBoundary.setName("PlatBoundary");
+    platBoundary.setEmail("platb@example.com");
+    platBoundary.setAnnualSpend(new java.math.BigDecimal("10000"));
+    platBoundary.setLastPurchaseDate(OffsetDateTime.now().minusMonths(5));
+    String pbody = objectMapper.writeValueAsString(platBoundary);
+    String presp = mockMvc.perform(post("/customers")
+            .contentType(MediaType.APPLICATION_JSON).content(pbody))
+            .andExpect(status().isCreated())
+            .andReturn().getResponse().getContentAsString();
+    String pid = objectMapper.readTree(presp).get("id").asText();
+    mockMvc.perform(get("/customers/" + pid))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.tier").value("Platinum"));
+}
+
+
 }
